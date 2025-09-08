@@ -18,6 +18,7 @@ public class CustomUserDetails implements UserDetails {
 
         this.userbean = userbean;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
