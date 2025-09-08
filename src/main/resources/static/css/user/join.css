@@ -1,0 +1,16 @@
+#joinContainer {
+    margin-top: 50px;
+    max-width: 600px; /* 원하는 최대 너비를 설정 */
+    margin-left: auto;
+    margin-right: auto;
+}
+#joinForm{
+	margin-top: 50px;
+}
+label,td{
+	white-space: nowrap;
+	vertical-align: middle;
+}
+.req{
+	color: red;
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고연</title>
+    <link rel="stylesheet" th:href="@{/css/index.css}">	
+</head>
+<body>
+
+	<th:block th:replace="~{module/cnav}"></th:block>
+	
+	<button class="btn" onclick="location.href='/meeting/create'">과팅 만들기</button>
+	<button class="btn" onclick="location.href='/meeting/group-list?pageNum=1'">과팅 참가하기</button>
+
+</body>
+</html>

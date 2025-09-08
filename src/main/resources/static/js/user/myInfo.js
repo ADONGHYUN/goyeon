@@ -1,0 +1,342 @@
+window.type = /*[[${type}]]*/ 'defaultType'; // defaultType은 타입이 없는 경우의 기본값입니다.
+window.id = /*[[${myinfo.uid}]]*/ 'defaultId'; // defaultId도 마찬가지입니다.
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const editP = document.getElementById('editProfile'); // 정보수정 버튼
+    const cancle = document.getElementById('cancle');  // 취소버튼
+    const save = document.getElementById('save'); // 저장버튼
+    const deleteA = document.getElementById('deleteAccount'); // 탈퇴버튼
+    const PWtr = document.getElementById('PWtr');  // 비밀번호, 비밀번호 변경 tr
+    const cPW = document.getElementById('changePW'); // 비밀번호 변경 버튼
+    const sns = document.getElementById('snsTr');
+    const button1 = document.getElementById('deleteAPI1');
+    const button2 = document.getElementById('deleteAPI2');
+	const type = JSON.parse(window.type);
+	const email = document.getElementById('uemail');
+	let pwWindow = null;
+	let deleteWindow = null;
+	
+	// ID 표기
+	document.getElementById('uid').value = type.id === 1 ? window.id : 'SNS 로그인'; // 컨트롤러에서 보낸 데이터가 1이면 sns로그인이다
+
+	function setButton(button, text, bg, color, mR='0px') {
+		button.textContent = text; 
+		button.style.backgroundColor = bg;
+		button.style.color=color;
+		button.style.marginRight=mR;
+		button.style.fontSize = '14px';
+	    button.style.borderRadius = '4px'; 
+	    button.style.cursor = 'auto';
+		button.style.pointerEvents = 'none';
+		button.addEventListener('mouseout', () => {
+		        button.style.backgroundColor = bg;
+		    });
+	    button.classList.remove('d-none');
+	}
+	
+	function setButton2(button, text, hv, disabled=false) {
+		button.textContent = text;
+		button.style.cursor = disabled ? 'pointer' : 'auto';
+		button.style.pointerEvents = disabled? 'auto' : 'none';
+		if(disabled) {
+			button.addEventListener('mouseover', () => {
+	        button.style.backgroundColor = hv;
+	    	});
+	    }
+	}
+	
+	function resetButton() {
+	    if (type.kakao === 1 && type.naver === 1) {
+	        setButton(button1, 'K', '#F7E300', '#000000', '10px', '#F0C000');
+			setButton(button2, 'N', '#03C75A', 'white', '10px', '#028C4E');
+	        sns.classList.remove('d-none');
+	    } else if (type.kakao === 1) {
+	        setButton(button1, 'K', '#F7E300', '#000000', '10px', '#F0C000');
+	        sns.classList.remove('d-none');
+	    } else if (type.naver === 1) {
+	        setButton(button1, 'N', '#03C75A', 'white', '10px', '#028C4E');
+	        sns.classList.remove('d-none');
+	    }
+    }
+    resetButton();
+    
+    function setButtonStyle(disabled=false) {
+	    if (type.kakao === 1 && type.naver === 1) {
+	        	setButton2(button1, disabled ? 'K 연동해제' : 'K', '#F0C000', disabled);
+				setButton2(button2, disabled ? 'N 연동해제' : 'N', '#028C4E', disabled);
+	    	} else if (type.kakao === 1) {
+	        	setButton2(button1, disabled ? 'K 연동해제' : 'K', '#F0C000', disabled);
+	    	} else if (type.naver === 1) {
+	        	setButton2(button1, disabled ? 'N 연동해제' : 'N', '#028C4E', disabled);
+	    	}
+	}
+	
+	editP.addEventListener('click', function() {
+	    document.getElementById('uemail').disabled = false;
+		
+		setButtonStyle(true);
+		
+		if(type.id === 1) {
+			PWtr.classList.remove('d-none');
+			cPW.classList.remove('d-none');
+			deleteA.classList.remove('d-none');
+	    }
+	        
+	    this.classList.add('d-none');
+	    cancle.classList.remove('d-none');
+	    save.classList.remove('d-none');
+	});
+	
+	function resetEdit() { // 취소버튼
+		PWtr.classList.add('d-none');
+                    cPW.classList.add('d-none');
+                    deleteA.classList.add('d-none');
+                    cancle.classList.add('d-none');
+                    save.classList.add('d-none');
+					document.getElementById('editProfile').classList.remove('d-none');
+                    const inputs = document.querySelectorAll('#info input');
+                    inputs.forEach(input => input.disabled = true);
+                    setButtonStyle();
+                    msg="";
+                    document.getElementById('mailmsg').textContent = msg;
+	}
+	
+	let dccon;
+	button1.addEventListener('click', function() {
+		let disconnect;
+		let url='';
+		if (type.kakao === 1) {
+			disconnect = confirm('Kakao 연동을 해제하시겠습니까?');
+        	url='/user/disconnectKakao';
+        } else if (type.naver === 1) {
+        	disconnect = confirm('Naver 연동을 해제하시겠습니까?');
+        	url='/user/disconnectNaver';
+        }
+        
+        if(disconnect) {
+        	if((type.id !== 1 && type.naver !== 1) || (type.id !== 1 && type.kakao !== 1)) {
+        		dccon = confirm('가입된 계정이 유일할 경우 약관에 동의 하셔야 합니다.');
+        		if(dccon) {
+        		disconnect = false;
+        		deleteA.click();
+        		} else {
+        			return;
+        		}
+        	} else {
+        		fetch(url, {
+		    	method: 'GET'
+		    })	
+	    	.then(response => response.text())
+	        .then(data => {
+	        	if(data){
+	            	console.log(data);
+	            	if(data === '1') {
+		            	alert('카카오 연동이 해제 되었습니다.');
+		            	delete type.kakao;
+		            	if(type.naver === 1) {
+		                	button2.classList.add('d-none');
+		                	resetButton();
+		                	setButtonStyle(true);
+		                } else {
+		                	sns.classList.add('d-none');
+		                }
+		            } else if (data === '2') {
+		                alert('네이버 연동이 해제되었습니다.');
+		                delete type.naver;
+		                sns.classList.add('d-none');
+		            }
+	            } else {
+	            	alert('연동 해제 중 오류가 발생했습니다.\n고객센터로 문의주세요.');
+	            }
+			})
+	        .catch(error => {
+	        	alert('연동 해제 중 오류가 발생했습니다.');
+	            console.error('Error:', error);
+	         });
+        	}
+        }
+   	});
+   	
+   	button2.addEventListener('click', function() {
+		let disconnect;
+		
+		disconnect = confirm('Naver 연동을 해제하시겠습니까?');
+        	url='/user/disconnectNaver';
+        	
+        if(disconnect) {
+			fetch('/user/disconnectNaver', {
+	        	method: 'GET'
+	        	})	
+	        	.then(response => response.text())
+	            .then(data => {
+	            	if(data) {
+		            	if (data === '2') {
+		            		alert('네이버 연동이 해제되었습니다.');
+		                	delete type.naver;
+		                	if(type.kakao === 1) {
+		                		button2.classList.add('d-none');
+		                	} else {
+		                		sns.classList.add('d-none');
+		                	}
+		                }
+	                } else {
+	                    alert('연동 해제 중 오류가 발생했습니다.\n고객센터로 문의주세요.');
+	                }
+	            })
+	            .catch(error => {
+	                alert('연동 해제 중 오류가 발생했습니다.');
+	                console.error('Error:', error);
+	         });
+   		}
+   	});
+   	
+
+	let checkEmail = true;
+	const oldEmail = email.value;
+	email.addEventListener('input', function() {
+	    const emailtype = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$/
+	    if (this.value === '' || this.value === oldEmail) {
+	        msg = '';
+	        checkEmail = (this.value === oldEmail);
+	    } else if (!emailtype.test(this.value)) {
+	        msg = '잘못된 이메일 형식입니다.';
+	        document.getElementById('mailmsg').style.color = 'red';
+	        checkEmail=false;
+	    } else {
+	        const formData = new FormData();
+	        formData.append('uemail', this.value);
+	
+	        fetch('/user/join/getMail', {
+	            method: 'POST',
+	            body: formData
+	        })
+	        .then(response => response.text())
+	        .then(data => {
+	            if (data === 'yes') {
+	                msg = '이미 등록된 이메일입니다.';
+	                document.getElementById('mailmsg').style.color = 'red';
+	                checkEmail=false;
+	            } else if (data === 'no') {
+	                msg = '등록 가능한 이메일입니다.';
+	                document.getElementById('mailmsg').style.color = 'green';
+	                checkEmail = true;
+	            } else {
+	                msg = '이메일 확인 중 오류가 발생했습니다.\n관리자에게 문의하십시오.';
+	                document.getElementById('mailmsg').style.color = 'red';
+	                checkEmail=false;
+	            }
+	            document.getElementById('mailmsg').textContent = msg;
+	        })
+	        .catch(error => {
+	            alert('이메일 확인 중 오류가 발생했습니다.\n관리자에게 문의하십시오.');
+	            console.error('Error:', error);
+	            document.getElementById('mailmsg').textContent = '서버와 통신 중 오류가 발생했습니다.';
+	            document.getElementById('mailmsg').style.color = 'red';
+	            checkEmail=false;
+	        });
+    	}
+    	document.getElementById('mailmsg').textContent = msg;
+	});
+
+	cancle.addEventListener('click', function() {
+		email.value = oldEmail;
+		resetEdit();
+	});
+
+	save.addEventListener('click', function() {
+
+        if (!checkEmail) {
+        	alert('이메일을 확인해주세요.');
+            email.focus();
+            return;
+        }
+        const formData = new FormData();
+        formData.append('uid', window.id);
+        formData.append('uemail', email.value);
+        
+		fetch('/user/myInfo', {
+        	method: 'POST',
+            body: formData
+        	})	
+        	.then(response => response.text())
+            .then(data => {
+                if (data === '1') {
+                    alert('수정되었습니다.');
+                    resetEdit();
+                } else {
+                    alert('저장 중 오류가 발생했습니다.');
+                }
+            })
+            .catch(error => {
+                alert('저장 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+         });
+   	});
+ 
+   cPW.addEventListener('click', function() {
+		if (pwWindow && !pwWindow.closed) {
+        	pwWindow.focus();
+        } else {
+        	pwWindow = window.open('/user/changepw', '', `width=500, height=500, left=${(window.innerWidth - 500) / 2}, top=${(window.innerHeight - 500) / 2}`);
+        }
+   	});
+ 
+	deleteA.addEventListener('click', function() {
+		if (deleteWindow && !deleteWindow.closed) {
+            deleteWindow.focus();
+        } else {
+        	deleteWindow = window.open('/user/delete', '탈퇴', `width=790, height=600, left=${(window.innerWidth - 790) / 2}, top=${(window.innerHeight - 600) / 2}`);
+        }
+        
+        deleteWindow.addEventListener('load', function() {
+    		deleteWindow.postMessage(dccon, '*');
+		});
+    });    
+});
+
+document.getElementById('uimageFile').addEventListener('change', function(event) {
+	document.getElementById('saveCancelButtons').style.display = 'block'; // 저장 및 취소 버튼 보이기
+    if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('currentProfileImage').src = e.target.result;  // 선택한 파일을 미리보기로 설정
+        };
+        reader.readAsDataURL(this.files[0]);  // 파일 읽기           
+    }
+});
+
+// 취소 버튼 클릭 시 원래 이미지를 복원하고 버튼 숨기기
+function cancelImageChange() {
+    document.getElementById('currentProfileImage').src = '${pageContext.request.contextPath}/resources/useruimages/${myinfo.uimage}';
+    document.getElementById('saveCancelButtons').style.display = 'none';
+    document.getElementById('uimageFile').value = '';  // 파일 선택 초기화
+}
+
+$('#uimageForm').on('submit', function(event) {
+    event.preventDefault(); // 기본 폼 제출 방지
+
+    var formData = new FormData(this); // FormData 생성
+
+    $.ajax({
+        url: '/user/update-uimage',
+        type: 'POST',
+        data: formData,  // FormData를 서버로 전송
+        contentType: false, // FormData의 기본 콘텐츠 유형을 설정하지 않음
+        processData: false, // jQuery가 데이터를 처리하지 않도록 설정
+        dataType: 'json', // 서버에서 JSON 응답을 받을 것으로 가정
+        success: function(response) {
+            if (response === 1) {
+                alert('프로필 이미지가 성공적으로 업데이트되었습니다.');
+                document.getElementById('saveCancelButtons').style.display = 'none';
+            } else {
+                alert('프로필 이미지 업데이트에 실패하였습니다.');
+                document.getElementById('saveCancelButtons').style.display = 'none';
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            alert('서버와의 통신에 실패하였습니다.');
+        }
+    });
+});

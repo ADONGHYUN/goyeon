@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>계정 탈퇴</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/user/delete.css}"> <!-- Link to external CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="form-container">
+            <h2 class="text-center">탈퇴 안내</h2>
+            <p class="text-center text-muted mb-4 text-nowrap"><br>탈퇴를 진행하시려면 약관에 동의해주셔야 합니다.</p>
+            <ol class="custom-checklist text-muted mb-4 text-nowrap">
+                <li>탈퇴 후 회원정보 및 개인형 서비스 이용기록은 모두 삭제됩니다.
+                    <div class="small-text">회원정보 및 서비스 이용기록은 모두 삭제되며, 삭제된 데이터는 복구되지 않습니다.</div>
+                </li>
+                <li>탈퇴 후 연동된 SNS계정도 모두 연동 해제 됩니다.</li>
+                <li>탈퇴 후에도 자유 게시판 서비스에 등록한 게시물은 그대로 남아 있습니다.
+                    <div class="small-text">삭제를 원하는 게시글이 있다면 반드시 탈퇴 전 삭제하시기 바랍니다.</div>
+                </li>
+                <li>탈퇴 후에도 자유 채팅방 서비스에 작성한 채팅은 그대로 남아 있습니다.</li>
+            </ol>
+
+            <form id="deleteForm">
+                <input type="hidden" id="uid" name="uid" th:value="${userId}" required>
+
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                    <label class="form-check-label" for="agreeTerms">탈퇴 약관을 모두 확인하였으며 모든 내용에 동의 합니다.</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="upw">비밀번호</label>
+                    <input id="upw" name="upw" type="password" class="form-control" required>
+                    <div id="pwmsg"></div>
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="button" id="delete" class="btn btn-custom">탈퇴</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/js/user/delete.js"></script> <!-- Link to external JS -->
+</body>
+</html>

@@ -1,0 +1,92 @@
+
+body {
+	background-color: #f8f9fa;
+}
+ol.custom-checklist {
+    list-style: none; /* 기본 리스트 스타일 제거 */
+    padding-left: 0; /* 기본 패딩 제거 */
+}
+
+ol.custom-checklist li {
+    position: relative; /* 체크 아이콘을 위치시키기 위해 */
+    padding-left: 30px; /* 체크 아이콘과 텍스트 사이의 간격 */
+    margin-bottom: 10px; /* 각 항목 사이의 간격 */
+}
+
+ol.custom-checklist li::before {
+    content: '✓'; /* 체크 아이콘 문자 */
+    position: absolute;
+    left: 0; /* 아이콘을 왼쪽에 위치 */
+    top: 0; /* 아이콘을 항목의 상단에 위치 */
+    color: #32CD32; /* 연두색 체크 아이콘 */
+    font-size: 20px; /* 체크 아이콘의 크기 조절 */
+    line-height: 1; /* 아이콘의 줄 높이 조절 */
+}
+ol.custom-checklist .small-text {
+    font-size: 0.85rem; /* 작은 글씨 크기 */
+}
+.form-container {
+	max-width: 790px; /* 가로 크기를 늘림 */
+	margin: 20px auto;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	background-color: #ffffff;
+}
+
+.text-nowrap {
+	white-space: nowrap;
+	overflow-x: auto; /* 필요 시 가로 스크롤 추가 */
+}
+
+.form-container h2 {
+	margin-bottom: 15px;
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+.form-group label {
+	font-weight: bold;
+}
+
+.form-group input {
+	width: 100%;
+}
+
+.form-group input[type="password"] {
+	border: 1px solid #ced4da;
+	border-radius: 4px;
+	padding: 10px;
+}
+
+.form-group input:focus {
+	border-color: #80bdff;
+	outline: none;
+	box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+}
+
+.btn-custom {
+	background-color: #007bff;
+	color: white;
+	border: none;
+}
+
+.btn-custom:hover {
+	background-color: #0056b3;
+}
+
+.form-check {
+	margin-bottom: 15px;
+	word-break: break-word; /* 긴 문장을 한 줄로 표시 */
+}
+
+.form-check input {
+	margin-right: 10px;
+}
+
+#pwmsg2 {
+	font-size: 0.875rem;
+	color: #dc3545;
+}

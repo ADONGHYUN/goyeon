@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>글쓰기</title>
+    <link rel="stylesheet" href="/css/board/tiny.css">
+    <script src="https://cdn.tiny.cloud/1/7koqa31ptbb97u91j8esaimsbwvuw2dyp5hr073hi0n7pjb4/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
+
+<th:block th:replace="~{module/cnav}"></th:block>
+<th:block th:replace="~{module/csidenav}"></th:block>
+<div class="container">
+    <div class="main-container">
+        <div id="bcategoryTitle">
+			<h1 class="text-center" th:text="${bcategory == '자유게시판 자유게시판' ? '자유게시판' : bcategory + ' 게시판'}"></h1>
+        </div>
+
+        <div class="form-container">
+            <form th:action="@{/board/writeBoard}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="text" class="formTitle" name="title" placeholder="제목을 입력해 주세요." required maxlength="15" style="margin-right: 30px;">
+                    
+                    <label for="bimageFile">썸네일</label>
+                    <input type="file" id="bimageFile" name="bimageFile">
+                </div>
+                <input type="text" class="formTitle" name="subtitle" placeholder="부제목을 입력해 주세요.(선택)" maxlength="15" style="margin-right: 30px;">
+                <input type="hidden" name="bcategory" th:value="${bcategory}">
+                <div class="form-group">
+                    <textarea id="content" name="content" rows="15"></textarea>
+                </div>
+                <div class="text-end mb-3">           
+                    <input type="submit" value="작성하기">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/js/board/tiny.js"></script>
+</body>
+</html>

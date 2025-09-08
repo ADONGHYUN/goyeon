@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>아이디 찾기</title>
+	<link rel="stylesheet" th:href="@{/css/user/findIdResult.css}">
+</head>
+<body>
+	<th:block th:replace="~{module/cnav}"></th:block>
+	<th:block th:replace="~{module/csidenav}"></th:block>
+	
+    <div th:replace="fragments/cnav :: cnav"></div> <!-- Navigation Bar -->
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="container px-5 pt-5 pb-3 my-5 text-center col-8">
+            <h1>아이디 찾기 결과</h1>
+            <hr>
+            <table class="table">
+                <tr>
+                    <td><h4 th:text="${userList.uemail} + '로 가입된 아이디입니다.'"></h4></td>
+                </tr>
+                <tr>
+                    <td th:text="${userList.uid}"></td>
+                </tr>
+            </table>
+            <a th:href="@{/findPw}">비밀번호 찾기</a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</body>
+</html>

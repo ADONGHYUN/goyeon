@@ -1,0 +1,79 @@
+/* navbar.css */
+
+#header {
+	padding-left: 40px;
+}
+
+header nav {
+	vertical-align: middle;
+}
+
+header a.navbar-brand {
+	padding: 10px 0;
+	font-size: 45px; /* 브랜드 글자 크기 */
+	font-weight: bold;
+	color: #000; /* 브랜드 글자 색상 */
+}
+
+header .navbar {
+	font-size: 32px; /* 네비게이션 바 글자 크기 */
+	color: #000;
+	margin: auto;
+	width: 100%;
+}
+
+header .nav-link {
+	color: #000; /* 네비게이션 링크 색상 */
+	margin: 0 auto;
+	white-space: nowrap; /* 공백이 없도록 설정 */
+}
+
+header .nav-link:hover {
+	color: #ffc21e; /* 마우스 오버 시 색상 */
+}
+
+header .navbar-toggler {
+	background-color: #f8f9fa; /* 토글 버튼 색상 */
+}
+
+ul {
+	margin: 0 auto; /* 리스트 중앙 정렬 */
+}
+
+@media (max-width: 768px) {
+	header a.navbar-brand {
+		font-size: 40px; /* 모바일 화면에서 브랜드 글자 크기 */
+	}
+	header .navbar {
+		font-size: 30px; /* 모바일 화면에서 네비게이션 글자 크기 */
+	}
+}
+
+.marginb {
+	margin-bottom: 100px !important; /* 마진 */
+}
+
+#notificationDropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: white;
+            border: 1px solid #ccc;
+            z-index: 1000;
+        }
+        #notificationDropdown ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #notificationDropdown li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        #notificationDropdown li:last-child {
+            border-bottom: none;
+        }

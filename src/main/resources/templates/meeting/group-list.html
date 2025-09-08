@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>과팅 만들기</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+		th:href="@{/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/css/meeting/group-list.css}">
+</head>
+
+<body>
+	<th:block th:replace="~{module/cnav}"></th:block>
+
+	<div class="container mt-5">
+		<h2 class="mb-4">과팅 그룹 참가하기</h2>
+		<div th:text="${userGender}"></div>
+		<div th:text="${a}"></div>
+		<div th:text="${authentication}"></div>
+		<!-- 그룹 목록 -->
+		<div class="row row-cols-1 row-cols-md-3 g-4">
+			<div class="col" th:each="group : ${groupList}">
+				<div class="card h-100"
+				     th:classappend="${group.leaderGender == 'M'} ? ' bg-primary text-white' : ' bg-pink text-white'">
+				    <div class="card-body">
+				        <h5 class="card-title" th:text="${group.groupName}">그룹 이름</h5>
+				        <p class="card-text">
+				            인원: <span th:text="${group.memberCount}">0</span>명
+				        </p>
+						<button type="button" class="btn btn-light join-btn"
+						        th:attr="data-id=${group.groupId}, data-gender=${group.leaderGender}">
+						    참가 신청
+						</button>
+				    </div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 페이징 -->
+		<!--<nav aria-label="Page navigation" class="mt-4">
+	            <ul class="pagination justify-content-center">
+	                <li class="page-item" th:classappend="${page.currentPage == 1} ? 'disabled'">
+	                    <a class="page-link" th:href="@{'/meeting/group-list?page=' + ${page.currentPage - 1}}">이전</a>
+	                </li>
+	                <li class="page-item" th:each="i : ${#numbers.sequence(page.startPage, page.endPage)}"
+	                    th:classappend="${i == page.currentPage} ? 'active'">
+	                    <a class="page-link" th:href="@{'/meeting/group-list?page=' + ${i}}" th:text="${i}">1</a>
+	                </li>
+	                <li class="page-item" th:classappend="${page.currentPage == page.totalPage} ? 'disabled'">
+	                    <a class="page-link" th:href="@{'/meeting/group-list?page=' + ${page.currentPage + 1}}">다음</a>
+	                </li>
+	            </ul>
+	        </nav>-->
+	</div>
+	
+	<div id="groupModal" class="modal" style="display:none;">
+	  <div class="modal-content">
+	    <span class="close">&times;</span>
+	    <h2>내 그룹 목록</h2>
+	    <ul id="myGroupList"></ul>
+	    <button id="confirmJoinBtn">참가 신청 확정</button>
+	  </div>
+	</div>
+
+	<script src="/js/meeting/group-list.js"></script>
+</body>
+
+</html>

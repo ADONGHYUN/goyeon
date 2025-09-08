@@ -1,0 +1,15 @@
+#bcategoryTitle {
+    margin-bottom: 100px;
+    text-align: center;
+}
+
+.main-container {
+    padding: 20px;
+    margin-left: 30px;
+    margin-top: 50px; /* 네비게이션 바와 사이드바를 고려한 여백 추가 */
+}
+
+.formTitle {
+    width: 300px;
+    margin-bottom: 20px;
+}

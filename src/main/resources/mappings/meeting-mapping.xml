@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="meetingDAO">
+	<resultMap type="groupBean" id="groupResultMap">
+		<id property="groupId" column="group_id" />
+		<result property="groupName" column="group_name" />
+		<result property="leaderUid" column="leader_uid" />		
+		<result property="leaderGender" column="leader_gender" />
+		<result property="memberCount" column="member_count" />
+		<result property="createdAt" column="created_at" />
+	</resultMap>
+	
+	<resultMap type="groupMemberBean" id="groupMembersResultMap">
+    <id property="groupId" column="group_id"/>
+    <id property="memberUid" column="member_uid"/>
+	</resultMap>
+
+
+<insert id="insertGroup" useGeneratedKeys="true" keyProperty="groupId">
+    <![CDATA[INSERT INTO groups (leader_uid, group_name, member_count)
+    VALUES (#{leaderUid}, #{groupName}, #{memberCount})]]>
+</insert>
+
+<insert id="insertGroupMembers" parameterType="java.util.List">
+    INSERT INTO group_members (group_id, member_uid)
+    VALUES
+    <foreach collection="members" item="m" separator=",">
+        (#{m.groupId}, #{m.memberUid})
+    </foreach>
+</insert>
+
+<select id="getGroupCount" resultType="int">
+        <![CDATA[
+        SELECT COUNT(*) FROM groups
+        ]]>
+</select>
+    
+<select id="getGroupList" resultMap="groupResultMap">
+        <![CDATA[
+        SELECT g.group_id, g.group_name, g.member_count, u.ugender AS leader_gender
+  		FROM groups g
+ 		JOIN user u 
+ 		ON g.leader_uid = u.uid 
+ 		ORDER BY created_at DESC limit 9 offset #{offset}
+        ]]>
+</select>
+
+<select id="getMyGroups" resultMap="groupResultMap">
+        <![CDATA[
+        SELECT * FROM groups
+        WHERE leader_uid = #{uid}
+        ]]>
+</select>
+
+
+<insert id="meetingRequest">
+    <![CDATA[
+    INSERT INTO requested_meeting
+    (requester_uid, from_group, to_group)
+    VALUES (#{requesterUid}, #{fromGroup}, #{toGroup})
+    ]]>
+</insert>
+
+<select id="getGroupMembers" resultMap="groupMembersResultMap">
+        <![CDATA[
+        SELECT * FROM group_members
+        WHERE group_id = #{groupId}
+        ]]>
+</select>
+
+</mapper>

@@ -1,0 +1,30 @@
+#infoContainer {
+    margin-top: 35px;
+    max-width: 800px; /* 원하는 최대 너비를 설정 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#uimageForm{
+	margin-bottom: 50px;
+}
+  label {
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+  /* 부트스트랩 기반 반응형 스타일 */
+  @media (max-width: 576px) { /* 모바일 크기 최적화 */
+    label {
+      font-size: 16px; /* 모바일 폰트 크기 축소 */
+    }
+    .form-control {
+      font-size: 14px; /* 입력 폼 글씨 크기 축소 */
+    }
+  }
+  
+  #profileImageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/csidenav.css}">
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script th:src="@{/js/csidenav.js}" defer></script>
+</head>
+
+<body>
+    <div class="sidebar" id="sidebar" th:fragment="sidenav"> <!-- 프래그먼트 정의 -->
+        <div id="toggleSidebar">&#9776; 메뉴</div> <!-- 햄버거 메뉴 버튼 -->
+        
+        <h4>
+            <a th:href="@{/board/myboard-info}">나의 게시판</a>
+            <button class="plus-board-button" onclick="showBoardNameForm()">+</button>
+        </h4>
+
+        <form id="boardNameForm" style="display:none;"> <!-- 초기에는 숨겨진 상태 -->
+            <input type="text" id="boardName" class="form-control mb-2" placeholder="게시판 이름">
+            <button type="button" class="btn btn-primary side" onclick="addBoard()">확인</button>
+            <button type="button" class="btn btn-secondary side" onclick="cancelAddBoard()">취소</button>
+        </form>
+
+        <div id="boardLinks"></div>                   
+    </div>
+</body>
+
+</html>

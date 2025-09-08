@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="userDAO">
+<resultMap type="user" id="userList">
+        <id property="uid" column="uid" />
+        <result property="upw" column="upw" />
+        <result property="uname" column="uname" />
+        <result property="unickname" column="unickname" />
+        <result property="ugender" column="ugender" />
+        <result property="uemail" column="uemail" />  
+        <result property="joindate" column="joindate" />
+        <result property="mailcode" column="mailcode" />
+        <result property="exdate" column="exdate" />
+        <result property="kapi" column="kapi" />
+        <result property="napi" column="napi" />
+        <result property="krToken" column="kr_token" />
+        <result property="nrToken" column="nr_token" />
+    </resultMap>
+
+    <select id="isUser" resultType="user">
+        <![CDATA[
+        SELECT * FROM user WHERE uid=#{uid} AND upw=#{upw}
+        ]]>
+    </select>
+    
+    <select id="getPass" resultType="String">
+		<![CDATA[
+		SELECT upw FROM USER
+		WHERE uid=#{uid}
+		]]>
+	</select>
+	
+	<select id="getID" resultType="String">
+		<![CDATA[
+		SELECT uid FROM USER
+		WHERE uid=#{uid}
+		]]>
+	</select>
+	
+	<select id="searchNickname" resultType="user">
+		<![CDATA[
+		SELECT uid, unickname FROM USER
+		WHERE unickname=#{unickname}
+		]]>
+	</select>
+	
+	<select id="getSameMail" resultType="user">
+		<![CDATA[
+		SELECT * FROM USER
+		WHERE UEMAIL=#{uemail}
+		]]>
+	</select>
+	
+	<insert id="insertUser" parameterType="user">
+		<![CDATA[
+			INSERT INTO USER(UID, UPW, UNAME, UNICKNAME, UGENDER, UEMAIL, NAPI, KAPI, KR_Token, NR_Token)
+			VALUES(#{uid},#{upw},#{uname},#{unickname},#{ugender},#{uemail},#{napi},#{kapi},#{KRToken},#{NRToken})
+		]]>
+	</insert>
+	
+	<select id="getUser" resultType="user">
+		<![CDATA[
+		SELECT * FROM USER
+		WHERE UID=#{userId} OR KAPI=#{userId} OR NAPI=#{userId}
+		]]>
+	</select>
+	
+	<update id="updateUimage">
+		<![CDATA[
+		UPDATE user SET uimage=#{fileName}
+		WHERE uid=#{userId}
+		]]>
+	</update>
+	
+	<update id="update">
+		<![CDATA[
+		UPDATE USER SET UEMAIL=#{uemail}
+		WHERE UID=#{uid}
+		]]>
+	</update>
+	
+	<update id="pwUpdate">
+		<![CDATA[
+		UPDATE USER SET UPW=#{npw} WHERE UID=#{uid}
+		]]>
+	</update>
+	
+	<delete id="delete">
+		<![CDATA[
+		DELETE FROM USER WHERE uid=#{uid}
+		]]>
+	</delete>
+
+<select id="searchAPI" resultType="String">
+		<![CDATA[
+		SELECT UID FROM USER WHERE uemail=#{uemail} AND uname=#{uname}]]>
+	</select>
+	   
+	<update id="setKAPI">
+		<![CDATA[
+		UPDATE USER SET KAPI=#{kapi}, KR_Token=#{KRToken}
+		WHERE UID=#{uid}
+		]]>
+	</update>
+
+	<update id="setNAPI">
+		<![CDATA[
+		UPDATE USER SET NAPI=#{napi}, NR_Token=#{NRToken}
+		WHERE UID=#{uid}
+		]]>
+	</update>
+	
+	<update id="updateMailCode" parameterType="user">
+		<![CDATA[
+			UPDATE USER SET MAILCODE=#{mailcode} WHERE UEMAIL=#{uemail}
+		]]>
+	</update>
+	
+	<select id="getMailCode" resultType="user">
+		<![CDATA[
+			SELECT distinct mailcode FROM USER
+			WHERE UEMAIL=#{uemail}
+		]]>
+	</select>
+	
+	<update id="updateMailCodeId" parameterType="user">
+		<![CDATA[
+			UPDATE USER SET MAILCODE=#{mailcode} WHERE UID=#{uid}
+		]]>
+	</update>
+	
+	<select id="getMailCodePw" resultType="user">
+		<![CDATA[
+			SELECT mailcode FROM USER
+			WHERE UID=#{uid}
+		]]>
+	</select>
+	
+	<update id="pwChange" parameterType="user">
+		<![CDATA[
+			UPDATE USER SET UPW=#{upw} WHERE UID=#{uid}
+		]]>
+	</update>
+	
+<update id="deleteBoard" parameterType="map">
+  <![CDATA[
+    UPDATE user
+    SET bcategory = TRIM(BOTH ',' FROM REPLACE(
+      CONCAT(',', bcategory, ','), 
+      CONCAT(',', #{boardName}, ','), 
+      ','
+    ))
+    WHERE uid = #{uid}
+      AND bcategory LIKE CONCAT('%', #{boardName}, '%')
+  ]]>
+</update>
+
+	
+</mapper>

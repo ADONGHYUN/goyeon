@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>비밀번호 찾기</title>
+	<link rel="stylesheet" th:href="@{/css/user/findPw.css}">
+</head>
+<body>
+    <th:block th:replace="~{module/cnav}"></th:block>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="container p-5 my-5 box1 col-md-8">
+            <ul class="nav nav-tabs">
+                <li class="nav-item col-6">
+                    <a class="nav-link text-center font-weight-bold fs-3" th:href="@{/findId}">아이디 찾기</a>
+                </li>
+                <li class="nav-item col-6">
+                    <a class="nav-link text-center active font-weight-bold fs-3" href="#">비밀번호 찾기</a>
+                </li>
+            </ul>
+            <br>
+            <div>
+                <p class="mb-0">비밀번호의 경우 암호화 저장되어 분실 시 찾아드릴 수 없는 정보입니다.</p>
+                <p>본인 확인을 통해 비밀번호를 재설정하실 수 있습니다.</p>
+            </div>
+            <hr>
+            <form action="#" method="post" id="idForm">
+                <table class="table-borderless">
+                    <tr>
+                        <td>
+                            <label for="uid">아이디를 입력해주세요.</label>
+                            <input type="text" id="uid" name="uid" class="form-control form-control-lg"> 
+                            <label for="uemail" class="d-none d-md-block">가입할 때 사용한 이메일을 입력해주세요.</label> 
+                            <label for="uemail" class="d-md-none">찾을 계정 이메일을 입력해주세요.</label>
+                            <div class="input-group">
+                                <input type="email" id="uemail" name="uemail" class="form-control form-control-lg"> 
+                                <input type="submit" value="인증번호 발송" class="btn btn-primary form-button-input btn-lg">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <form action="@{/findPw}" method="post" id="codeForm">
+                <table>
+                    <tr>
+                        <td>
+                            <label for="code">전송받은 인증번호를 기입해주세요.</label><br>
+                            <div class="input-group">
+                                <input type="text" id="code" name="code" class="form-control form-control-lg">
+                                <input type="submit" value="비밀번호 찾기" class="btn btn-primary form-button-input btn-lg">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <form action="@{/findPwResult}" method="post" id="resultForm">
+                <table>
+                    <tr>
+                        <td><input type="hidden" id="result" name="uid"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</body>
+</html>

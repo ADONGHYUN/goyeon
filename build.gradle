@@ -1,0 +1,101 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.10'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'java'
+}
+
+group 'com.dh'
+version '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
+}
+
+tasks.processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+// 개발중일때 사용, sts에서 수정하면 바로 적용이됨
+dependencies {
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot 기본 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // MariaDB
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+
+    // AspectJ (필요하다면 최신 버전 확인)
+    implementation 'org.aspectj:aspectjrt:1.9.9.1'
+    implementation 'org.aspectj:aspectjweaver:1.9.9.1'
+
+    // JSON (최신 버전으로 변경)
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
+    // MyBatis
+    implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.3.3'
+	implementation group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '3.0.3'
+
+    // 비밀번호 암호화
+    implementation 'org.mindrot:jbcrypt:0.4'
+
+    // JavaMail API 변경
+    implementation 'jakarta.mail:jakarta.mail-api:2.0.1'
+    
+    // Servlet & WebSocket API 변경
+    implementation 'jakarta.websocket:jakarta.websocket-api:2.1.0'
+
+    // Spring Mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // FileUpload
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+    implementation 'commons-io:commons-io:2.11.0'
+    
+    // WebFlux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    
+    // Reactor
+    implementation 'io.projectreactor.netty:reactor-netty'
+    implementation 'io.projectreactor:reactor-core'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

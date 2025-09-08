@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>자유 게시판</title>
+    <link rel="stylesheet" href="/css/board/boardList.css">
+</head>
+<body>
+
+	<th:block th:replace="~{module/cnav}"></th:block>
+		<th:block th:replace="~{module/csidenav}"></th:block>
+
+<div class="container">
+    <div id="mainBoard" class="main-container">
+        <div id="boardTitle">
+            <h1 class="text-center">자유 게시판</h1>
+        </div>
+
+        <div class="text-end mb-3">
+            <!-- 검색 폼 -->
+            <form th:action="@{/board/search}" method="get" id="searchForm" style="display: flex; align-items: center; width: 500px; margin-left: auto;">
+                <select class="form-select me-2" name="searchType" id="searchType" style="flex: 1;">
+                    <option value="제목-내용" th:selected="${searchType == '제목-내용'}">제목+내용</option>
+                    <option value="제목" th:selected="${searchType == '제목'}">제목</option>
+                    <option value="내용" th:selected="${searchType == '내용'}">내용</option>
+                </select>
+                <input type="text" name="searchText" class="form-control me-2" placeholder="검색어를 입력하세요" id="searchTextInput" style="flex: 3;" th:value="${searchText}">
+                <button type="submit" class="btn btn-dark">검색</button>
+            </form>
+        </div>
+
+        <!-- 게시글 목록 -->
+        <div id="boardList">
+            <div th:each="post : ${posts}" class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${post.title}">게시글 제목</h5>
+                    <p class="card-text" th:text="${post.content}">게시글 내용</p>
+                    <p class="card-text"><small class="text-muted" th:text="${post.writer}">작성자</small></p>
+                    <a th:href="@{/board/view/{id}(id=${post.id})}" class="btn btn-primary">더 보기</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 페이지 네비게이션 -->
+        <div th:if="${totalPages > 1}" class="pagination justify-content-center mt-4">
+            <a th:href="@{/board?page=0}" class="btn btn-outline-primary me-2" th:classappend="${pageNumber == 0} ? 'disabled'">처음</a>
+            <a th:href="@{/board?page=${pageNumber - 1}}" class="btn btn-outline-primary me-2" th:if="${pageNumber > 0}">이전</a>
+
+            <span th:each="page : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${page == pageNumber} ? 'fw-bold' : ''">
+                <a th:href="@{/board?page=${page}}" th:text="${page + 1}" class="btn btn-outline-primary me-2"></a>
+            </span>
+
+            <a th:href="@{/board?page=${pageNumber + 1}}" class="btn btn-outline-primary me-2" th:if="${pageNumber < totalPages - 1}">다음</a>
+            <a th:href="@{/board?page=${totalPages - 1}}" class="btn btn-outline-primary" th:classappend="${pageNumber == totalPages - 1} ? 'disabled'">끝</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="/js/board/boardList.js"></script> <!-- JavaScript 파일 경로 -->
+</body>
+</html>

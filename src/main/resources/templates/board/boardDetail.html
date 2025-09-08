@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 상세보기</title>
+    <!--<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="/css/board/boardDetail.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+	<th:block th:replace="~{module/cnav}"></th:block>
+	<th:block th:replace="~{module/csidenav}"></th:block>
+
+    <div class="container-board">
+        <div class="details">
+            <div id="postHead" style="display: flex; align-items: center;">
+                <div class="text-details" style="flex: 1;">
+                    <p><strong>작성자:</strong> <span th:text="${board.uid}"></span></p>
+                    <p><strong>제목:</strong> <span th:text="${board.title}"></span></p>
+                    <p><strong>부제목:</strong> <span th:text="${board.subtitle}"></span></p>
+                </div>
+                <div class="image mb-3" th:if="${board.bimage}" style="margin-left: 20px;">
+                    <img th:src="@{/resources/Thumbnail/{bimage}(bimage=${board.bimage})}" 
+                         th:alt="${board.title}" style="max-width: 150px; height: auto;">
+                </div>
+            </div>
+
+            <hr>
+            <div id="detailContent"><strong>내용:</strong> <span th:utext="${board.content}"></span></div>
+            <p><strong>작성일:</strong> <span th:text="${#temporals.format(board.created_at, 'yyyy-MM-dd HH:mm')}"></span></p>
+            <p><strong>수정일:</strong> <span th:text="${#temporals.format(board.updated_at, 'yyyy-MM-dd HH:mm')}"></span></p>
+        </div>
+
+        <div class="actions mb-3">
+            <a th:href="@{/board/update/{bnum}(bnum=${board.bnum})}" class="btn btn-primary">수정</a>
+            <button class="btn btn-danger" th:onclick="'deletePost(' + ${board.bnum} + ')'">삭제</button>
+        </div>
+
+        <div class="back-link mb-3">
+            <a href="javascript:history.back()" class="btn btn-secondary">뒤로가기</a>
+        </div>
+
+        <!-- 댓글 섹션 -->
+        <div class="comments">
+            <h2>댓글</h2>
+            <div class="comment-form mb-4">
+                <textarea id="comment-content" class="form-control" placeholder="댓글을 입력하세요"></textarea>
+                <button id="submit-comment" class="btn btn-primary mt-2">댓글 달기</button>
+            </div>
+
+            <ul class="list-unstyled comment-list">
+                <li th:each="rep : ${reply}" th:if="${rep.parentReplyId == null}" class="mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <p><strong th:text="${rep.uid}"></strong></p>
+                            <p th:text="${rep.content}"></p>
+                            <div class="vote-buttons">
+                                <button class="btn btn-outline-success upvote" th:classappend="${rep.upvoteId.contains(session.userId) ? 'active' : ''}" th:data-rid="${rep.rid}">
+                                    👍 <span class="vote-count" th:text="${rep.replyUpvoteCount}">0</span>
+                                </button>
+                                <button class="btn btn-outline-danger downvote" th:classappend="${rep.downvoteId.contains(session.userId) ? 'active' : ''}" th:data-rid="${rep.rid}">
+                                    👎 <span class="vote-count" th:text="${rep.replyDownvoteCount}">0</span>
+                                </button>
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control comment-rereply" placeholder="답글 입력"></textarea>
+                                <button class="btn btn-secondary mt-2 submit-rereply" th:data-rid="${rep.rid}">답글</button>
+                            </div>
+
+                            <!-- 답글 리스트 -->
+                            <ul class="list-unstyled ps-3 rereply-list" th:data-parent-id="${rep.rid}">
+                                <li th:each="rerep : ${reply}" th:if="${rerep.parentReplyId == rep.rid}" class="mb-2">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p><strong th:text="${rerep.uid}"></strong></p>
+                                            <p th:text="${rerep.content}"></p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+	<script th:inline="javascript">
+	        // 댓글을 추가하는 함수
+	        function addComment(bnum, commentContent) {
+	            $.ajax({
+	                url: '/reply/writeReply',
+	                type: 'POST',
+	                data: {
+	                    content: commentContent,
+	                    bnum: bnum
+	                },
+	                success: function(response) {
+	                    var newComment = `
+	                        <li class="mb-3">
+	                            <div class="card">
+	                                <div class="card-body">
+	                                    <p class="card-text"><strong>${response.author}</strong></p>
+	                                    <p class="card-text">${response.content}</p>
+	                                    <div class="vote-buttons">
+	                                        <button class="btn btn-outline-success upvote" data-rid="${response.rid}">👍<span class="vote-count">${response.replyUpvoteCount}</span></button>
+	                                        <button class="btn btn-outline-danger downvote" data-rid="${response.rid}">👎<span class="vote-count">${response.replyDownvoteCount}</span></button>
+	                                    </div>       
+	                                    <div class="mb-3">
+	                                        <textarea class="form-control comment-rereply" placeholder="답글 입력"></textarea>
+	                                        <button class="btn btn-secondary mt-2 submit-rereply" data-rid="${response.rid}">답글</button>
+	                                    </div>
+	                                    <ul class="list-unstyled ps-3 rereply-list" data-parent-id="${response.rid}"></ul>
+	                                </div>
+	                            </div>
+	                        </li>`;
+	                    $('.comment-list').prepend(newComment);
+	                    $('#comment-content').val('');
+	                },
+	                error: function(xhr, status, error) {
+	                    alert('댓글을 추가하는 중 오류가 발생했습니다.');
+	                }
+	            });
+	        }
+
+	        // 댓글 등록 버튼 클릭 이벤트
+	        $('#submit-comment').click(function() {
+	            var commentContent = $('#comment-content').val();
+	            var bnum = /*[[${board.bnum}]]*/ 'default';
+
+	            if (commentContent.trim() !== '') {
+	                addComment(bnum, commentContent);
+	            } else {
+	                alert('댓글 내용을 입력해주세요.');
+	            }
+	        });
+
+	        // 답글을 추가하는 함수
+	        function addrereply(bnum, rereplyContent, parentReplyId) {
+	            $.ajax({
+	                url: '/reply/writeRereply',
+	                type: 'POST',
+	                data: {
+	                    content: rereplyContent,
+	                    bnum: bnum,
+	                    parentReplyId: parentReplyId
+	                },
+	                success: function(response) {
+	                    var newReply = `
+	                        <li class="mb-2">
+	                            <div class="card">
+	                                <div class="card-body">
+	                                    <p class="card-text"><strong>${response.author}</strong></p>
+	                                    <p class="card-text">${response.content}</p>
+	                                </div>
+	                            </div>
+	                        </li>`;
+	                    
+	                    $(`ul.rereply-list[data-parent-id="${parentReplyId}"]`).prepend(newReply);
+	                    $(`button[data-rid="${parentReplyId}"]`).siblings('textarea').val('');
+	                },
+	                error: function(xhr, status, error) {
+	                    alert('답글을 추가하는 중 오류가 발생했습니다.');
+	                }
+	            });
+	        }
+
+	        // 동적 답글 달기 버튼 이벤트 핸들러
+	        $(document).on('click', '.submit-rereply', function() {
+	            var rereplyContent = $(this).siblings('textarea').val();
+	            var bnum = /*[[${board.bnum}]]*/ 'default';
+	            var parentReplyId = $(this).data('rid');
+	            
+	            if (rereplyContent.trim() !== '') {
+	                addrereply(bnum, rereplyContent, parentReplyId);
+	            } else {
+	                alert('답글 내용을 입력해주세요.');
+	            }
+	        });
+
+	        // 투표 함수
+	        function handleVote(rid, voteType, upButtonActive, downButtonActive) {
+	            var url = "/reply/vote";
+	            $.ajax({
+	                url: url,
+	                type: 'POST',
+	                data: {
+	                    rid: rid,
+	                    voteType: voteType,
+	                    upButtonActive: upButtonActive,
+	                    downButtonActive: downButtonActive
+	                },
+	                success: function(response) {
+	                    var upButton = $(`button.upvote[data-rid="${rid}"]`);
+	                    var downButton = $(`button.downvote[data-rid="${rid}"]`);
+	                    var upvoteCountElement = upButton.find('.vote-count');
+	                    var downvoteCountElement = downButton.find('.vote-count');
+	                    var upvoteCount = parseInt(upvoteCountElement.text());
+	                    var downvoteCount = parseInt(downvoteCountElement.text());
+
+	                    switch (response.result) {
+	                        case 'upRemove':
+	                            upButton.removeClass('active');
+	                            upvoteCount -= 1;
+	                            break;
+	                        case 'downToUp':
+	                            downButton.removeClass('active');
+	                            upButton.addClass('active');
+	                            downvoteCount -= 1;
+	                            upvoteCount += 1;
+	                            break;
+	                        case 'up':
+	                            upButton.addClass('active');
+	                            upvoteCount += 1;
+	                            break;
+	                        case 'downRemove':
+	                            downButton.removeClass('active');
+	                            downvoteCount -= 1;
+	                            break;
+	                        case 'upToDown':
+	                            upButton.removeClass('active');
+	                            downButton.addClass('active');
+	                            upvoteCount -= 1;
+	                            downvoteCount += 1;
+	                            break;
+	                        case 'down':
+	                            downButton.addClass('active');
+	                            downvoteCount += 1;
+	                            break;
+	                        case 'invalidVote':
+	                            alert('잘못된 투표 유형입니다.');
+	                            return;
+	                        default:
+	                            alert('알 수 없는 응답 결과입니다.');
+	                            return;
+	                    }
+
+	                    upvoteCountElement.text(upvoteCount);
+	                    downvoteCountElement.text(downvoteCount);
+	                },
+	                error: function(xhr, status, error) {
+	                    alert('투표 처리 중 오류가 발생했습니다.');
+	                }   
+	            });
+	        }
+
+	        // 투표 버튼 클릭 이벤트
+	        $(document).on('click', '.upvote, .downvote', function() {
+	            var button = $(this);
+	            var rid = button.data('rid');
+	            var upButton = $(`button.upvote[data-rid="${rid}"]`);
+	            var downButton = $(`button.downvote[data-rid="${rid}"]`);
+	            var upButtonActive = upButton.hasClass('active');
+	            var downButtonActive = downButton.hasClass('active');
+	            var voteType = button.hasClass('upvote') ? 'upvote' : 'downvote';
+
+	            handleVote(rid, voteType, upButtonActive, downButtonActive);
+	        });
+
+	        // 게시글 삭제 함수
+	        function deletePost(bnum) {
+	            if (!confirm("정말 삭제하시겠습니까?")) {
+	                return;
+	            }
+
+	            $.ajax({
+	                url: '/board/delete/bnum/' + bnum,
+	                type: 'DELETE',
+	                success: function(response) {
+	                    alert("게시글이 삭제되었습니다.");
+	                    window.location.href = document.referrer;
+	                },
+	                error: function(xhr, status, error) {
+	                    alert("삭제에 실패했습니다. 다시 시도해주세요.");
+	                }
+	            });
+	        }
+
+	</script>
+
+</body>
+</html>

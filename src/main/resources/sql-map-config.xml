@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <typeAliases>
+        <typeAlias alias="user" type="com.dh.goyeon.user.UserBean"/>
+        <typeAlias alias="boardBean" type="com.dh.goyeon.board.BoardBean"/>
+        <typeAlias alias="replyBean" type="com.dh.goyeon.reply.ReplyBean"/>
+        <typeAlias alias="communityBean" type="com.dh.goyeon.community.CommunityBean"/>
+        <typeAlias alias="groupBean" type="com.dh.goyeon.meeting.GroupBean"/>
+        <typeAlias alias="groupMemberBean" type="com.dh.goyeon.meeting.GroupMemberBean"/>
+        <typeAlias alias="notificationBean" type="com.dh.goyeon.notification.NotificationBean"/>
+    </typeAliases>
+    
+
+
+</configuration>

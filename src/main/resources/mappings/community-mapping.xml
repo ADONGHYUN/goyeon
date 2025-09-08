@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="communityDAO">
+	<resultMap type="communityBean" id="communityResultMap">
+		<id property="cnum" column="cnum" />
+		<result property="uid" column="uid" />
+		<result property="introduction" column="introduction" />
+		<result property="ccategory" column="ccategory" />
+		<result property="createdAt" column="created_at" />
+		<result property="image" column="image" />
+	</resultMap>
+
+	<select id="getSchoolPicture" resultMap="communityResultMap">
+    <![CDATA[
+    SELECT uid, introduction, image 
+    FROM community 
+    WHERE ccategory = 'schoolPic' 
+    ORDER BY created_at DESC limit 3
+    ]]>
+	</select>
+
+	<insert id="insertSchoolPic" parameterType="communityBean">
+		<![CDATA[INSERT INTO community (uid, introduction, ccategory, image)	
+		VALUES (
+		#{uid},             
+		#{introduction},
+		#{ccategory},
+		#{image}
+		)]]>
+	</insert>
+
+
+</mapper>

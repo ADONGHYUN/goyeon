@@ -1,0 +1,81 @@
+
+    .main-container {
+        padding: 20px;
+        margin-left: 30px;
+        margin-top: 50px; /* 네비게이션 바와 사이드바를 고려한 여백 추가 */
+    }
+
+    a {
+        color: inherit !important; /* 링크 텍스트의 색상을 부모 요소의 색상으로 설정 */
+        text-decoration: none !important; /* 밑줄 제거 */
+    }
+
+    #boardTitle {
+        margin-bottom: 50px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-weight: bold;
+    }
+
+    #space-card {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    #space-card img {
+        width: 100%;
+        height: 225px;
+        border-radius: 5px 5px 0 0;
+        z-index: 100;
+    }
+
+    #cardEditButton {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10000;
+        display: none; /* 기본적으로 숨김 */
+    }
+
+    .space-card:hover #cardEditButton {
+        display: block; /* 카드에 마우스를 올렸을 때 보이기 */
+    }
+
+    .card-body {
+        margin: 10px;
+    }
+
+    .card-text {
+        margin-top: 10px;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 20px;
+        bottom: 20px;
+    }
+
+    .pagination a {
+        padding: 5px 10px;
+        text-decoration: none;
+        border: 1px solid #ccc;
+        margin: 0 3px;
+        color: #333;
+        border-radius: 10px;
+    }
+
+    .pagination a:hover {
+        background-color: #f0f0f0;
+    }
+
+    .pagination .active {
+        color: white;
+    }

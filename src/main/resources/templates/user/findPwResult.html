@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>비밀번호 찾기</title>
+	<link rel="stylesheet" th:href="@{/css/user/findPwResult.css}">
+</head>
+<body>
+    <th:block th:replace="~{module/cnav}"></th:block>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="container p-5 my-5 col-md-8">
+            <h1 th:text="${uid} + '님 비밀번호 변경'"></h1>
+            <form action="#" method="post" id="cngPwForm">
+                <div class="row">
+                    <hr>
+                    <table class="table">
+                        <tr>
+                            <td class="col-4"><label for="upw">새 비밀번호</label></td>
+                            <td class="col-8">
+                                <input id="upw" class="form-control form-control-lg" name="upw"
+                                       type="password" maxlength="20" minlength="8"
+                                       placeholder="비밀번호는 영문, 숫자, 특수문자(@#^$!%*?&) 조합으로 8~20자리를 입력해주세요."
+                                       pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#^$!%*?&])[A-Za-z\d@#^$!%*?&]+$"
+                                       required>
+                                <div id="pwmsg"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="col-4"><label for="upw2">새 비밀번호 확인</label></td>
+                            <td class="col-8">
+                                <input id="upw2" class="form-control form-control-lg" name="upw2"
+                                       type="password" maxlength="20"
+                                       placeholder="비밀번호를 다시 한 번 입력해주세요." required>
+                                <div id="pwmsg2"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="submit" value="수정" class="btn btn-primary btn-lg">
+                <button type="button" class="btn btn-secondary btn-lg" onclick="formReset()">리셋</button>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+	<script src="/js/user/findPwResult.js"></script>
+</body>
+</html>

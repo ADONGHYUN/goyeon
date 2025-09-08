@@ -1,0 +1,53 @@
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f9f9f9;
+	margin: 0;
+	padding: 0;
+}
+
+.container-board {
+	max-width: 1200px;
+	margin: 200px auto; /* 가운데 정렬 */
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#detailContent {
+	min-height: 500px;
+}
+
+.comment-form textarea {
+	resize: vertical;
+}
+
+.comment-list li {
+	margin-bottom: 20px;
+}
+
+.comment-timestamp {
+	font-style: italic;
+	color: #888;
+}
+
+.vote-buttons {
+	display: flex;
+	gap: 10px;
+}
+.vote-buttons .btn {
+    width: 55px !important;
+	height: 38px !important;
+	display: flex;             
+	align-items: center;      
+}
+.vote-buttons .btn.active {
+	background-color: #28a745;
+	color: white;
+}
+
+.vote-buttons .btn-outline-danger.active {
+	background-color: #dc3545;
+	color: white;
+}

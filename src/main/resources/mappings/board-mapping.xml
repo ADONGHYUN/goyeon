@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="boardMapper">
+ <resultMap id="boardBean" type="com.dh.goyeon.board.BoardBean">
+        <id property="bnum" column="bnum"/>
+        <result property="uid" column="uid"/>
+        <result property="title" column="title"/>
+        <result property="subtitle" column="subtitle"/>
+        <result property="content" column="content"/>
+        <result property="bimage" column="bimage"/>
+        <result property="created_at" column="created_at"/>
+        <result property="updated_at" column="updated_at"/>
+        <result property="bcategory" column="bcategory"/>
+    </resultMap>
+
+	<select id="getboardCount" resultType="int">
+        <![CDATA[
+        SELECT COUNT(*) FROM board
+        ]]>
+    </select>
+    
+    <select id="getBoardList" resultMap="boardBean">
+        <![CDATA[
+        SELECT * FROM board ORDER BY created_at DESC limit 9 offset #{posts}
+        ]]>
+    </select>
+    
+    <select id="getSearchCount" parameterType="map" resultType="int">        
+        <![CDATA[SELECT COUNT(*) FROM board WHERE 1=1
+        <if test="searchType == '제목-내용'"> 
+        	AND title like CONCAT('%', #{searchText}, '%') OR content like CONCAT('%', #{searchText}, '%')
+        </if>
+        <if test="searchType == '제목'"> 
+        	AND title like CONCAT('%', #{searchText}, '%')
+        </if>
+        <if test="searchType == '내용'"> 
+        	AND content like CONCAT('%', #{searchText}, '%')
+        </if>]]>
+    </select>
+    
+    <select id="getSearchCountList" resultMap="boardBean">        
+       <![CDATA[ SELECT * FROM board WHERE 1=1
+        <if test="searchType == '제목-내용'"> 
+        	AND title like CONCAT('%', #{searchText}, '%') OR content like CONCAT('%', #{searchText}, '%')
+        </if>
+        <if test="searchType == '제목'"> 
+        	AND title like CONCAT('%', #{searchText}, '%')
+        </if>
+        <if test="searchType == '내용'"> 
+        	AND content like CONCAT('%', #{searchText}, '%')
+        </if>
+        ORDER BY created_at DESC limit 9 offset #{posts}]]>
+    </select>
+    
+    
+    
+    <select id="getCateboardCount" resultType="int">
+     <![CDATA[SELECT COUNT(*)
+    FROM board
+    WHERE FIND_IN_SET(TRIM(#{bcategory}), TRIM(bcategory))]]>
+</select>
+
+    
+    <select id="getCateBoardList" parameterType="map" resultMap="boardBean">
+        <![CDATA[
+        SELECT * FROM board WHERE FIND_IN_SET(TRIM(#{bcategory}), TRIM(bcategory)) ORDER BY created_at DESC limit 9 offset #{posts}
+        ]]>
+    </select>
+    
+   <select id="getCateSearchCount" parameterType="map" resultType="int">        
+    SELECT COUNT(*) 
+    FROM board 
+    WHERE 1=1
+    <if test="searchType == '제목-내용'"> 
+        AND (title like CONCAT('%', #{searchText}, '%') OR content like CONCAT('%', #{searchText}, '%'))
+    </if>
+    <if test="searchType == '제목'"> 
+        AND title like CONCAT('%', #{searchText}, '%')
+    </if>
+    <if test="searchType == '내용'"> 
+        AND content like CONCAT('%', #{searchText}, '%')
+    </if>
+    AND FIND_IN_SET(TRIM(#{bcategory}), TRIM(bcategory))
+</select>
+
+    
+    <select id="getCateSearchCountList" parameterType="map" resultMap="boardBean">        
+        SELECT * FROM board WHERE 1=1
+        <if test="searchType == '제목-내용'"> 
+        	AND (title like CONCAT('%', #{searchText}, '%') OR content like CONCAT('%', #{searchText}, '%'))
+        </if>
+        <if test="searchType == '제목'"> 
+        	AND title like CONCAT('%', #{searchText}, '%')
+        </if>
+        <if test="searchType == '내용'"> 
+        	AND content like CONCAT('%', #{searchText}, '%')
+        </if>
+        AND FIND_IN_SET(TRIM(#{bcategory}), TRIM(bcategory))
+        ORDER BY created_at DESC limit 9 offset #{posts}
+    </select>
+    
+    
+    
+    
+    
+    
+    
+    
+    <select id="getBoard" resultType="boardBean">
+        <![CDATA[
+        SELECT * FROM board WHERE BNUM=#{bnum}
+        ]]>
+    </select>
+    
+    <select id="getMyBoard" resultMap="boardBean">
+        <![CDATA[
+        SELECT * FROM board WHERE UID=#{uid}
+        ]]>
+    </select>
+    
+   
+    
+    <insert id="writeBoard" parameterType="boardBean">
+   <![CDATA[ INSERT INTO board (uid, title, subtitle, bcategory, content, bimage, created_at, updated_at)
+    VALUES (
+        #{uid},          
+        #{title},   
+        #{subtitle},       
+        #{bcategory},
+        #{content},        
+        #{bimage},        
+        NOW(),         
+        NOW()            
+    ) ]]>
+</insert>
+
+<update id="updatePost" parameterType="boardBean">
+ 	   <![CDATA[ UPDATE board SET   
+        title = #{title},
+        subtitle = #{subtitle},
+        bcategory = #{bcategory},
+        content = #{content},
+        bimage = #{bimage},
+        updated_at = NOW() WHERE
+  		bnum = #{bnum}]]>     
+</update>
+
+
+ <delete id="deletePost">
+    	<![CDATA[
+        DELETE FROM board WHERE BNUM=#{BNUM}
+        ]]>
+    </delete>
+    
+<select id="getMyBoardCategory" parameterType="string" resultType="string">
+       <![CDATA[ SELECT bcategory FROM user WHERE uid = #{uid}]]>
+    </select>
+
+ <!-- 특정 카테고리 게시판의 게시물들 불러오기 -->
+<select id="myCategoryBoard" parameterType="user" resultMap="boardBean">
+         <![CDATA[
+        SELECT * 
+        FROM board 
+        WHERE uid = #{uid} 
+        AND FIND_IN_SET(TRIM(#{bcategory}), TRIM(bcategory))
+        ]]>
+    </select>
+    
+
+<update id="updateBoardOrder" parameterType="map">
+   <![CDATA[ UPDATE user
+    SET bcategory = #{bcategoryOrder}
+    WHERE uid = #{uid}]]>
+</update>
+
+    
+<update id="createBoard" parameterType="map">
+<![CDATA[
+UPDATE user
+SET bcategory = CASE
+    WHEN bcategory IS NULL OR bcategory = '' THEN #{bcategory}
+    ELSE CONCAT(bcategory,',',#{bcategory})
+END
+WHERE uid = #{uid}
+]]>
+</update>
+
+ <delete id="deleteBoard">
+    	<![CDATA[
+        DELETE FROM board WHERE uid=#{uid} AND TRIM(both ' ' FROM bcategory)=#{boardName}
+        ]]>
+    </delete>
+
+
+</mapper>

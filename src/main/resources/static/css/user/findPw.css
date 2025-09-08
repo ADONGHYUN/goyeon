@@ -1,0 +1,15 @@
+body, html {
+    overflow-x: hidden;
+}
+label, td {
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+p {
+	color: grey;
+}
+
+table {
+	width: 100%;
+}
