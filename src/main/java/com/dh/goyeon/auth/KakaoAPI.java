@@ -16,7 +16,7 @@ public class KakaoAPI {
     private final String loginURI;
     private final String clientSecret;
     //처음 커밋됐나?
-    
+    // 브랜치 후 머지
     public KakaoAPI(String key, String loginURI, String clientSecret) {
         this.key = key;
         this.loginURI = loginURI;
